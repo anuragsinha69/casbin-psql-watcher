@@ -310,7 +310,10 @@ func (w *Watcher) listenMessage(ctx context.Context) error {
 		// if NotifySelf is enabled, will callback when id is same.
 		w.RLock()
 		if m.ID != w.GetLocalID() || w.GetNotifySelf() {
-			w.callback(notification.Payload)
+		       // it handle multiple PID when prefork is true
+			if w.callback != nil {
+				w.callback(notification.Payload)
+			}
 		}
 		w.RUnlock()
 	}
